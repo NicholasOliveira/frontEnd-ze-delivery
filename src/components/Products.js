@@ -158,7 +158,12 @@ export default function Products({ history }) {
     const { loading, error, data } = useQuery(pocFriend);
     if (loading) return <p className="loader">Carregando...</p>;
     if (error) return <p>Error :(</p>;
-    setIdFriend(data.pocSearch[0].id);
+
+    if (data.pocSearch.length == 0) {
+      return localStorage.setItem('Error2', true), history.push('/');
+    } else {
+      setIdFriend(data.pocSearch[0].id);
+    }
   }
 
   function RenderCategory() {
@@ -189,6 +194,7 @@ export default function Products({ history }) {
     const { loading, error, data } = useQuery(pocProduct);
     if (loading) return <p className="loader">Carregando...</p>;
     if (error) return <p>Error :(</p>;
+
 
     if (data.poc.products.length == 0) {
       return <h1 className="productsNotFound">Nenhum produto encontrado!</h1>;

@@ -11,6 +11,12 @@ export default function Home({ history }) {
       <div className="invalid_end">Endereço não encontrado (: </div>
     </div>
   }
+  function ObError2() {
+    return <div id="ErrorClass">
+      <div className="spacer">&nbsp;</div>
+      <div className="invalid_end">Desculpe, não atendemos este endereço (: </div>
+    </div>
+  }
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -27,6 +33,7 @@ export default function Home({ history }) {
           Encontrar produtos
         </button>
         {localStorage.getItem('Error') ? (localStorage.removeItem('Error'), <ObError />) : ''}
+        {localStorage.getItem('Error2') ? (localStorage.removeItem('Error2'), <ObError2 />) : ''}
       </form>
     </div>
   )

@@ -50,20 +50,25 @@ footer{
   .MenuDefault{
     flex-direction: column;
   }
+  .MenuDefault .cart{
+    justify-self: center;
+  }
 }
 .card img {
   max-width: 100%;
+  height: 200px;
 }
 .card .text {
   padding: 0 20px 20px;
 }
 .card .text h3{
 font-size: 15px;
+height: 40px;
 }
 .card .text > button {
-  background: gray;
+  background: #282c34;;
   border: 0;
-  color: white;
+  color: #ffffff;
   padding: 10px;
   width: 100%;
   }
@@ -87,7 +92,7 @@ font-size: 15px;
 }
 .products div{
   margin: 5px;
-  background: tomato;
+  background: #fff;
   text-align: center;
   padding: 30px;
   width: 300px;
@@ -128,7 +133,7 @@ font-size: 15px;
   padding: 10px 10px;
   width: 350px;
   border-radius: 15px;
-  border: 1px solid #b82f20;
+  border: 1px solid #282c34;
   margin-bottom: 15px;
 }
 .BarSearch{
@@ -147,10 +152,11 @@ font-size: 18px;
 
 .inputSearch{
   font-size: 22px;
-  padding: 10px 10px;
+  padding: 7px 10px;
+  margin: 3px;
   width: 200px;
   border-radius: 15px;
-  border: 1px solid #b82f20;
+  border: 1px solid #282c34;
 }
 .ContainerHome form button{
   width: 200px;
@@ -193,18 +199,21 @@ font-size: 18px;
     align-items: center;
 }
 .btn{
-  background-color: #b82f20;
-  color: #fff;
+  background-color: #282c34;
+  color: #ffffff;
   padding: 10px 30px;
   border-radius: 20px;
+  transition: 1;
+}
+.btn:hover{
+  background-color: #282c10;
 }
 .MenuDefault li a{
   text-decoration: none;
-  color: #fff;
+  color: #ffffff;
 }
 .MenuDefault li:hover{
-  background-color: chocolate;
-  color: #fff;
+  background-color: #282c10;
 }
 .Category{
   display: inline-block;
@@ -220,14 +229,14 @@ font-size: 18px;
 .loader,
 .loader:before,
 .loader:after {
-  background: #b82f20;
+  background: #282c34;
   -webkit-animation: load1 1s infinite ease-in-out;
   animation: load1 1s infinite ease-in-out;
   width: 1em;
   height: 4em;
 }
 .loader {
-  color: #b82f20;
+  color: #282c34;
   text-indent: -9999em;
   margin: 88px auto;
   position: relative;

@@ -17,13 +17,15 @@ export default function Index() {
         </div>
 
         <div className="BarSearch">
-          <input id="cep" className="inputSearch" placeholder="Busque seu produto..." type="text" />
-          <button className="btn"><img src="https://pt.seaicons.com/wp-content/uploads/2015/11/search-icon.png" /></button>
+          <form>
+            <input readOnly id="cep" className="inputSearch" placeholder="Busque seu produto..." type="text" />
+            <button type="submit" className="btn"><img src="https://oticaisabeladias.com.br/Images/searchIcon.png" /></button>
+          </form>
         </div>
 
         <ul className="cart">
           <li className="btn">
-            Carrinho (0) <img className="img_cart" src="https://paleomagazine.com/wp-content/uploads/2015/04/Shopping-Cart.png"></img>
+            Carrinho (0) <img className="img_cart" src="https://reddingdesigns.com/images/icons/icon-ecommerce-grey.png"></img>
           </li>
         </ul>
 
