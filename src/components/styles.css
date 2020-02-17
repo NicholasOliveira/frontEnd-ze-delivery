@@ -74,15 +74,17 @@ height: 40px;
   }
 .General{
   width: 100%;
-  min-height: 50vh;
+  min-height: 100vh;
   height: auto;
   display: flex;
   justify-self: center;
   align-items: center;
   margin-bottom: 15px;
+  flex-direction: column;
 }
 .General>div{
   width: 100%;
+  min-height: 50vh;
 }
 .products{
   display: flex;

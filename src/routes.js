@@ -2,30 +2,21 @@ import React, { useState, useEffect } from 'react';
 import { BrowserRouter, Switch, Route, Link, useParams } from 'react-router-dom';
 import Home from './components/Home'
 import Products from './components/Products'
+import Header from "./components/Header";
+import Footer from "./components/Footer";
+import './components/styles.css';
 
-export default function Routes() {
-  //<Products Addreas={Addreas} />
-  /*
-  <ul className="MenuDefault">
-          <li>
-            <Link to="/">Inicio </Link>
-          </li>
-          <li>
-            <Link to="/products">Produtos</Link>
-          </li>
-        </ul>
-        */
+export default function Routes({ CategoryOrProduct }) {
   return (
-    <>
+    <section className="General">
       <BrowserRouter>
         <Switch>
           <Route path="/" exact component={Home}>
           </Route>
-          <Route path="/products/:category" component={Products}>
+          <Route path={`/products/:${CategoryOrProduct}/:valor`} component={Products}>
           </Route>
-
         </Switch>
       </ BrowserRouter>
-    </>
+    </section>
   );
 }

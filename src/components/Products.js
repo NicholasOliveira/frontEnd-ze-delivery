@@ -6,6 +6,8 @@ import { gql } from "apollo-boost";
 import ApolloClient from 'apollo-boost';
 import axios from 'axios';
 import './styles.css';
+import Header from "./Header";
+import Footer from "./Footer";
 
 export default function Products({ history }) {
   const client = new ApolloClient({
@@ -22,12 +24,22 @@ export default function Products({ history }) {
   const DateNow = new Date().toISOString();
   const Algorithm = "NEAREST";
 
-  function FilterProduct() {
+
+  /*function FilterProduct() {
     setFilterString((IdCategory) != 0 ? `categoryId:${IdCategory}` : `search: "${SearchTerm}"`);
+  }*/
+
+  function FilterProduct() {
+    let { product } = useParams();
+    let { category } = useParams();
+    let { valor } = useParams();
+
+    setFilterString((IdCategory) != 0 && category != undefined ? `categoryId:${IdCategory}` : (product) != undefined ? `search: "${valor}"` : `search: ""`)
   }
 
   function SearchTerms(TermInput) {
-    (TermInput) != "" ? setSearchTerm(TermInput) : '';
+    let { valor } = useParams();
+    (valor) != "" ? setSearchTerm(TermInput) : '';
   }
 
   function SearchLocation(addreas) {
@@ -150,8 +162,8 @@ export default function Products({ history }) {
   }
 
   function SearchCategory() {
-    let { category } = useParams();
-    setIdCategory(category);
+    let { valor } = useParams();
+    setIdCategory(valor);
   }
 
   function SearchFriends() {
@@ -166,6 +178,10 @@ export default function Products({ history }) {
     }
   }
 
+  function setOption() {
+    localStorage.setItem('option', 'category')
+  }
+
   function RenderCategory() {
     const { loading, error, data } = useQuery(pocCategory);
     if (loading) return <p className="loader">Carregando...</p>;
@@ -175,7 +191,7 @@ export default function Products({ history }) {
 
     return <ul className="Category">
       {data.allCategory.map(({ title, id }) => (
-        <a key={id} href={`/products/${id}`} >
+        <a key={id} onClick={setOption} href={`/products/category/${id}`}>
           <li className="btn">
             {id}: {title}
           </li>
@@ -188,7 +204,7 @@ export default function Products({ history }) {
   function RenderProduct() {
     SearchFriends();
     SearchCategory();
-    SearchTerms("");
+    SearchTerms();
     FilterProduct();
 
     const { loading, error, data } = useQuery(pocProduct);
@@ -224,11 +240,15 @@ export default function Products({ history }) {
   }
 
   return (
-    <ApolloProvider client={client}>
-      <div>
-        <RenderCategory />
-        <RenderProduct />
-      </div>
-    </ApolloProvider>
+    <>
+      <Header />
+      <ApolloProvider client={client}>
+        <div>
+          <RenderCategory />
+          <RenderProduct />
+        </div>
+      </ApolloProvider>
+      <Footer />
+    </>
   );
 }
