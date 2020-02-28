@@ -2,7 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { BrowserRouter, Link } from 'react-router-dom';
 import './styles.css';
 
-export default function Header() {
+export default function Header({ Cart }) {
+
+  (localStorage.getItem('cart')) ? Cart = JSON.parse(localStorage.getItem('cart')) : '';
+
   const [Term, setTerm] = useState('');
 
   function SearchProductTerm(event) {
@@ -32,9 +35,24 @@ export default function Header() {
 
       <ul className="cart">
         <li className="btn">
-          Carrinho (0) <img className="img_cart" src="https://reddingdesigns.com/images/icons/icon-ecommerce-grey.png"></img>
+          Carrinho ({(Cart) ? Cart.length : '0'}) <img className="img_cart" src="https://reddingdesigns.com/images/icons/icon-ecommerce-grey.png"></img>
         </li>
-      </ul>
+
+        {
+          ((Cart) && (Cart.length > 0)) ?
+            <div className="block-cart">
+              {Cart.map(product => (
+                <div key={product.id}>
+                  <p><img src={product.img} width="50"></img></p>
+                  <p>{product.title}, R$: {product.price}</p>
+                  <p>Qtd: {(product.qtd) ? product.qtd : 1}</p>
+                  <p><a href="#">Excluir</a></p>
+                </div>
+              ))}
+            </div> : ''}
+
+
+      </ul >
 
     </header >
   )

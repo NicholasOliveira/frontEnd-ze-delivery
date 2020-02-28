@@ -2,8 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { BrowserRouter, Switch, Route, Link, useParams } from 'react-router-dom';
 import Home from './components/Home'
 import Products from './components/Products'
-import Header from "./components/Header";
-import Footer from "./components/Footer";
 import './components/styles.css';
 
 export default function Routes({ CategoryOrProduct }) {

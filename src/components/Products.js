@@ -10,6 +10,16 @@ import Header from "./Header";
 import Footer from "./Footer";
 
 export default function Products({ history }) {
+  const [Cart, setCart] = useState((localStorage.getItem('cart')) ? JSON.parse(localStorage.getItem('cart')) : []);
+
+  function AddCart(id, title, price, img, qtd) {
+    const found = Cart.find(element => element.id == id);
+    (found == undefined) ? setCart([...Cart, { id, title, price, img, qtd }]) :
+      setCart([...Cart, ...Cart.find(element => element.id == id ? element.qtd = qtd + 1 : element)]);
+  }
+
+  localStorage.setItem('cart', JSON.stringify(Cart))
+
   const client = new ApolloClient({
     uri: 'https://api.code-challenge.ze.delivery/public/graphql',
   });
@@ -35,6 +45,7 @@ export default function Products({ history }) {
     let { valor } = useParams();
 
     setFilterString((IdCategory) != 0 && category != undefined ? `categoryId:${IdCategory}` : (product) != undefined ? `search: "${valor}"` : `search: ""`)
+
   }
 
   function SearchTerms(TermInput) {
@@ -230,7 +241,9 @@ export default function Products({ history }) {
               <br />
               Volume: {productVariants[0].volume}
             </p>
-            <button>Adicionar / Remover</button>
+            <button onClick={() => {
+              AddCart(id, title, productVariants[0].price, images[0].url, 1)
+            }}>Adicionar</button>
           </div>
         </article>
 
@@ -241,7 +254,7 @@ export default function Products({ history }) {
 
   return (
     <>
-      <Header />
+      <Header Cart={Cart} />
       <ApolloProvider client={client}>
         <div>
           <RenderCategory />
