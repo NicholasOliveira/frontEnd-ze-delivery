@@ -13,9 +13,28 @@ export default function Products({ history }) {
   const [Cart, setCart] = useState((localStorage.getItem('cart')) ? JSON.parse(localStorage.getItem('cart')) : []);
 
   function AddCart(id, title, price, img, qtd) {
-    const found = Cart.find(element => element.id == id);
-    (found == undefined) ? setCart([...Cart, { id, title, price, img, qtd }]) :
-      setCart([...Cart, ...Cart.find(element => element.id == id ? element.qtd = qtd + 1 : element)]);
+
+    var foundIndex = null;
+    var i = 0;
+
+    while (Cart.length > 0) {
+      if (Cart[i].id == id) {
+        foundIndex = i;
+        break;
+      }
+      i += 1
+      if (i >= Cart.length) {
+        break;
+      }
+    }
+
+    if (foundIndex != null) {
+      const CartNew = [...Cart];
+      CartNew[foundIndex] = { ...CartNew[foundIndex], qtd: CartNew[foundIndex].qtd + 1 };
+      setCart(CartNew);
+    } else {
+      setCart([...Cart, { id, title, price, img, qtd }])
+    }
   }
 
   localStorage.setItem('cart', JSON.stringify(Cart))
@@ -231,7 +250,7 @@ export default function Products({ history }) {
     return <main className="cards">
       {data.poc.products.map(({ title, id, productVariants, images }) => (
         <article key={id} className="card" >
-          <img src={`${images[0].url}`} alt="Imagem do produto" />
+          <img src={`${images[0].url}`} onError={(e) => { e.target.onerror = null; e.target.src = "https://via.placeholder.com/600x500" }} />
           <div className="text">
 
             <h3>{id}: {title}</h3>
@@ -254,7 +273,7 @@ export default function Products({ history }) {
 
   return (
     <>
-      <Header Cart={Cart} />
+      <Header Cart={Cart} setCart={setCart} />
       <ApolloProvider client={client}>
         <div>
           <RenderCategory />

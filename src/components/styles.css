@@ -154,7 +154,13 @@ height: 40px;
 color: #ddd;
 font-size: 18px;
 }
-
+.btnDeleteProd{
+  border: 0px;
+  padding: 5px;
+  outline: 0;
+  color: #fff;
+  background-color: rgb(228, 97, 97);
+}
 .inputSearch{
   font-size: 22px;
   padding: 7px 10px;

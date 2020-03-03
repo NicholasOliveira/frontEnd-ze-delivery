@@ -2,9 +2,25 @@ import React, { useState, useEffect } from 'react';
 import { BrowserRouter, Link } from 'react-router-dom';
 import './styles.css';
 
-export default function Header({ Cart }) {
+export default function Header({ Cart, setCart }) {
 
   (localStorage.getItem('cart')) ? Cart = JSON.parse(localStorage.getItem('cart')) : '';
+
+  function DeleteItem(id) {
+    var foundIndex = null;
+    var i = 0;
+
+    while (Cart.length > 0) {
+      if (Cart[i].id == id) {
+        foundIndex = i;
+        let CartNew = [...Cart];
+        CartNew.splice(foundIndex, 1);
+        setCart(CartNew);
+        break;
+      }
+      i += 1
+    }
+  }
 
   const [Term, setTerm] = useState('');
 
@@ -43,10 +59,11 @@ export default function Header({ Cart }) {
             <div className="block-cart">
               {Cart.map(product => (
                 <div key={product.id}>
-                  <p><img src={product.img} width="50"></img></p>
-                  <p>{product.title}, R$: {product.price}</p>
+                  <p><img src={product.img} onError={(e) => { e.target.onerror = null; e.target.src = "https://via.placeholder.com/50x50" }} width="50"></img></p>
+                  <p>{product.title}</p>
                   <p>Qtd: {(product.qtd) ? product.qtd : 1}</p>
-                  <p><a href="#">Excluir</a></p>
+                  <p>R$: {product.price * product.qtd}</p>
+                  <p><button className="btnDeleteProd" onClick={() => (DeleteItem(product.id))}>Excluir</button></p>
                 </div>
               ))}
             </div> : ''}
