@@ -53,17 +53,15 @@ export default function Products({ history }) {
   const DateNow = new Date().toISOString();
   const Algorithm = "NEAREST";
 
-
-  /*function FilterProduct() {
-    setFilterString((IdCategory) != 0 ? `categoryId:${IdCategory}` : `search: "${SearchTerm}"`);
-  }*/
-
   function FilterProduct() {
     let { product } = useParams();
     let { category } = useParams();
     let { valor } = useParams();
 
-    setFilterString((IdCategory) != 0 && category != undefined ? `categoryId:${IdCategory}` : (product) != undefined ? `search: "${valor}"` : `search: ""`)
+    setFilterString((IdCategory) != 0 && category != undefined && category != 'product' ? `categoryId:${IdCategory}` : (product) != undefined ? `search: "${valor}"` : `search: ""`)
+
+
+    console.log(product)
 
   }
 
@@ -178,6 +176,7 @@ export default function Products({ history }) {
       }
     }`
 
+  console.log(pocProduct);
   const pocCategory = gql`
     query allCategoriesSearch{
       allCategory{

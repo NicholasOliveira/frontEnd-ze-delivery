@@ -43,9 +43,9 @@ export default function Header({ Cart, setCart }) {
       <div className="BarSearch">
         <form onSubmit={SearchProductTerm}>
           <input value={Term} onChange={term => setTerm(event.target.value)} id="cep" className="inputSearch" placeholder="Busque seu produto..." type="text" />
-          <Link to={`/products/product/${Term}`}>
-            <button onClick={setOption} type="submit" className="btn"><img src="https://oticaisabeladias.com.br/Images/searchIcon.png" /></button>
-          </Link>
+          <a onClick={setOption} href={`/products/product/${Term}`}>
+            <button onClick={setOption} type="button" className="btn"><img src="https://oticaisabeladias.com.br/Images/searchIcon.png" /></button>
+          </a>
         </form>
       </div>
 
