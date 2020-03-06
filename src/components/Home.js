@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import './styles.css';
 import Header from "./Header";
+import SweetCart from './SweetCart';
+import SearchBar from './SearchBar';
 import Footer from "./Footer";
 
 export default function Home({ history }) {
@@ -29,7 +31,11 @@ export default function Home({ history }) {
 
   return (
     <>
-      <Header />
+      <section className="MenuDefault">
+        <Header />
+        <SearchBar />
+        <SweetCart />
+      </section>
       <div className="ContainerHome">
         <form onSubmit={handleSubmit}>
           <label htmlFor="cep">Digite seu Endereço: </label>

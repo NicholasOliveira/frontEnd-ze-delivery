@@ -13,4 +13,4 @@ function SearchLocation(addreas) {
     });
 }
 
-export default SearchLocation();
+export default SearchLocation;

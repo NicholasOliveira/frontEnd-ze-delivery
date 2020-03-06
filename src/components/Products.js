@@ -8,8 +8,13 @@ import axios from 'axios';
 import './styles.css';
 import Header from "./Header";
 import Footer from "./Footer";
+import SweetCart from './SweetCart';
+import SearchBar from './SearchBar';
+import Cards from './Cards';
+import { pocCategory, pocFriend, pocProduct } from '../Schems/pocSearch';
 
 export default function Products({ history }) {
+
   const [Cart, setCart] = useState((localStorage.getItem('cart')) ? JSON.parse(localStorage.getItem('cart')) : []);
 
   function AddCart(id, title, price, img, qtd) {
@@ -41,34 +46,25 @@ export default function Products({ history }) {
 
   const client = new ApolloClient({
     uri: 'https://api.code-challenge.ze.delivery/public/graphql',
-  });
+  })
 
   const [IdFriend, setIdFriend] = useState("532");
-  const [IdCategory, setIdCategory] = useState(0)
+  const [IdCategory, setIdCategory] = useState()
   const [Lat, setLat] = useState(-23.632919);
   const [Lng, setLng] = useState(-46.69945)
   const [SearchTerm, setSearchTerm] = useState("")
   const [FilterString, setFilterString] = useState('categoryId: 98, search: ""')
 
-  const DateNow = new Date().toISOString();
-  const Algorithm = "NEAREST";
-
   function FilterProduct() {
-    let { product } = useParams();
-    let { category } = useParams();
-    let { valor } = useParams();
+    let { product, category, valor } = useParams();
 
-    setFilterString((IdCategory) != 0 && category != undefined && category != 'product' ? `categoryId:${IdCategory}` : (product) != undefined ? `search: "${valor}"` : `search: ""`)
+    (product != undefined && valor != undefined || category != undefined && valor == undefined || valor == 0 ? setIdCategory(null) : '')
 
+    category != 'product' && IdCategory != null ? setIdCategory(valor) : product != undefined ? setSearchTerm(valor) : ""
 
-    console.log(product)
-
+    console.log(IdCategory, valor, product, category)
   }
 
-  function SearchTerms(TermInput) {
-    let { valor } = useParams();
-    (valor) != "" ? setSearchTerm(TermInput) : '';
-  }
 
   function SearchLocation(addreas) {
     let key = 'AIzaSyDtExJ9D8rvkn6gzhwsNuTB2TDOY07-6WA';
@@ -84,119 +80,15 @@ export default function Products({ history }) {
 
   SearchLocation(localStorage.getItem('Endereco'));
 
-  const pocFriend = gql`{
-    pocSearch(
-     now: "${DateNow}", 
-     algorithm: "${Algorithm}", 
-     lat: "${Lat}", 
-     long: "${Lng}") {
-      __typename
-      id
-      status
-      tradingName
-      officialName
-      deliveryTypes {
-        __typename
-        pocDeliveryTypeId
-        deliveryTypeId
-        price
-        title
-        subtitle
-        active
-      }
-      paymentMethods {
-        __typename
-        pocPaymentMethodId
-        paymentMethodId
-        active
-        title
-        subtitle
-      }
-      pocWorkDay {
-        __typename
-        weekDay
-        active
-        workingInterval {
-          __typename
-          openingTime
-          closingTime
-        }
-      }
-      address {
-        __typename
-        address1
-        address2
-        number
-        city
-        province
-        zip
-        coordinates
-      }
-      phone {
-        __typename
-        phoneNumber
-      }
-    }
-  }`
-
-  const pocProduct = gql`{
-      poc(id: "${IdFriend}") {
-        id
-        products(${FilterString}) {
-          id
-          title
-          rgb
-          images {
-            url
-          }
-          productVariants {
-            availableDate
-            productVariantId
-            price
-            inventoryItemId
-            shortDescription
-            title
-            published
-            volume
-            volumeUnit
-            description
-            subtitle
-            components {
-              id
-              productVariantId
-              productVariant {
-                id
-                title
-                description
-                shortDescription
-              }
-            }
-          }
-        }
-      }
-    }`
-
-  console.log(pocProduct);
-  const pocCategory = gql`
-    query allCategoriesSearch{
-      allCategory{
-        title
-        id
-      }
-    }`;
-
-  function LoadingError(loading, error) {
-    if (loading) return <p className="loader">Carregando...</p>;
-    if (error) return <p>Error :(</p>;
-  }
-
   function SearchCategory() {
     let { valor } = useParams();
     setIdCategory(valor);
   }
 
   function SearchFriends() {
-    const { loading, error, data } = useQuery(pocFriend);
+    const { loading, error, data } = useQuery(pocFriend, {
+      variables: { Lat, Lng },
+    });
     if (loading) return <p className="loader">Carregando...</p>;
     if (error) return <p>Error :(</p>;
 
@@ -216,13 +108,16 @@ export default function Products({ history }) {
     if (loading) return <p className="loader">Carregando...</p>;
     if (error) return <p>Error :(</p>;
 
-
-
     return <ul className="Category">
+      <a onClick={setOption} href='/products/category/0'>
+        <li className="btn">
+          Ver todos
+          </li>
+      </a>
       {data.allCategory.map(({ title, id }) => (
         <a key={id} onClick={setOption} href={`/products/category/${id}`}>
           <li className="btn">
-            {id}: {title}
+            {title}
           </li>
         </a>
       ))
@@ -233,10 +128,16 @@ export default function Products({ history }) {
   function RenderProduct() {
     SearchFriends();
     SearchCategory();
-    SearchTerms();
     FilterProduct();
 
-    const { loading, error, data } = useQuery(pocProduct);
+    const { loading, error, data } = useQuery(pocProduct, {
+      variables: {
+        "id": IdFriend,
+        "Search": SearchTerm,
+        "categoryId": IdCategory
+      }
+    });
+
     if (loading) return <p className="loader">Carregando...</p>;
     if (error) return <p>Error :(</p>;
 
@@ -244,40 +145,20 @@ export default function Products({ history }) {
     if (data.poc.products.length == 0) {
       return <h1 className="productsNotFound">Nenhum produto encontrado!</h1>;
     }
-    // /cart/add/${id}
-    // /cart/remove/${id}
-    return <main className="cards">
-      {data.poc.products.map(({ title, id, productVariants, images }) => (
-        <article key={id} className="card" >
-          <img src={`${images[0].url}`} onError={(e) => { e.target.onerror = null; e.target.src = "https://via.placeholder.com/600x500" }} />
-          <div className="text">
 
-            <h3>{id}: {title}</h3>
-            <p>R$: {productVariants[0].price}</p>
-            <p>
-              Invetário: {productVariants[0].inventoryItemId}
-              <br />
-              Volume: {productVariants[0].volume}
-            </p>
-            <button onClick={() => {
-              AddCart(id, title, productVariants[0].price, images[0].url, 1)
-            }}>Adicionar</button>
-          </div>
-        </article>
-
-      ))
-      }
-    </main >
+    return <Cards data={data} AddCart={AddCart} />
   }
-
   return (
     <>
-      <Header Cart={Cart} setCart={setCart} />
+      <section className="MenuDefault">
+        <Header />
+        <SearchBar />
+        <SweetCart Cart={Cart} setCart={setCart} />
+      </section>
+
       <ApolloProvider client={client}>
-        <div>
-          <RenderCategory />
-          <RenderProduct />
-        </div>
+        <RenderCategory />
+        <RenderProduct />
       </ApolloProvider>
       <Footer />
     </>
